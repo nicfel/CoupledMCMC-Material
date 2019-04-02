@@ -1,6 +1,6 @@
 # Coupled MCMC in BEAST 2
 
-Nicola F. Müller<sup>1,2</sup>, Remco Bouckaert<sup>1,2</sup>
+Nicola F. Müller<sup>1,2</sup>, Remco Bouckaert<sup>3</sup>
 
 <sup>1</sup>ETH Zurich, Department of Biosystems Science and Engineering, 4058 Basel, Switzerland
 
