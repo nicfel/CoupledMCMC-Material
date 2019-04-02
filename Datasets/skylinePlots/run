@@ -1,0 +1,7 @@
+files=./out_ess_estimates/*.log
+for f in $files
+do
+echo ${f/out_ess_estimates/ess}
+
+	/Applications/BEAST\ 2.5.2/bin/loganalyser -burnin 10 $f > ${f/out_ess_estimates/ess}
+done

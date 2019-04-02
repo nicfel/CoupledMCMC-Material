@@ -1,0 +1,7 @@
+files=*.xml
+counter=1
+for f in $files
+do
+sub -W 4:00 -n 4 -J ds1 java -jar ~/jar/coupledMCMC.jar -seed $counter
+let counter=counter+1
+done

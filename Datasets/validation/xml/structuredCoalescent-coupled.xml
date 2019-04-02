@@ -86,7 +86,7 @@ t5=0">
    </input>
 
 
-   <run spec="beast.coupledMCMC.CoupledMCMC" resampleEvery="10" id="beast.coupledMCMC.CoupledMCMC" chains="4" maxTemperature="0.1" chainLength="100000000" storeEvery="10000">
+   <run spec="beast.coupledMCMC.CoupledMCMC" resampleEvery="1000" logHeatedChains="true" id="beast.coupledMCMC.CoupledMCMC" chains="2" maxTemperature="0.1" chainLength="100000000" storeEvery="10000">
 
      <init spec='StructuredCoalescentMultiTypeTree' id='tree'>
          <migrationModel spec='SCMigrationModel'>
@@ -152,7 +152,7 @@ t5=0">
 
      <!-- Loggers -->
 
-     <logger logEvery="1000" fileName="$(filebase).log">
+     <logger logEvery="10000" fileName="$(filebase).log">
        <model idref='posterior'/>
        <log idref="posterior"/>
        <log idref="treeLikelihood"/>
@@ -171,23 +171,23 @@ t5=0">
        <log spec='TreeRootTypeLogger' multiTypeTree="@tree"/>
      </logger>
 
-     <logger logEvery="1000" fileName="$(filebase).trees" mode="tree">
+     <logger logEvery="10000" fileName="$(filebase).trees" mode="tree">
        <log idref="tree"/>
      </logger>
 
 
-     <logger logEvery="1000" fileName="$(filebase).typedNode.trees" mode="tree">
+     <logger logEvery="10000" fileName="$(filebase).typedNode.trees" mode="tree">
          <log spec='TypedNodeTreeLogger' multiTypeTree="@tree"/>
      </logger>
 
-     <logger logEvery="1000">
+     <!-- <logger logEvery="1000">
        <model idref='posterior'/>
        <log idref="posterior"/>
        <log idref="treeLikelihood"/>
        <log idref="treePrior"/>
        <log idref="totalTypeChanges"/>
        <ESS spec='ESS' name='log' arg="@treePrior"/>
-     </logger>
+     </logger> -->
    </run>
 
  </beast>
