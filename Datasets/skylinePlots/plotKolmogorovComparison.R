@@ -28,7 +28,7 @@ col4 <- rgb(red=0.4660, green=0.6740,blue=0.1880)
 col3 <- rgb(red=0.3010, green=0.7450,blue=0.9330)
 
 temperatures = c("hcv_coal_mcmc", "hcv_coal_coupled_cold", "hcv_coal_coupled_warm", "hcv_coal_coupled_hot")
-method = c("mcmc", "cold", "warm", "hot")
+method = c("MCMC", "target=0.468", "target=0.234", "target=0.117")
 
 first = TRUE
 # Read In all data ---------------------------------
@@ -42,12 +42,19 @@ for (i in seq(1,length(temperatures),1)){
     # t <- read.table(log[j], header=TRUE)
     t <- fread(log[j], header=TRUE,select = 2)
     
-    new.val <- t[-seq(1,ceiling(length(t$posterior)/10)), ]
-    
-    if (first){
-      val = new.val
+    if (length(t$posterior)!=10001 && length(t$posterior)!=40001){
+      file.remove(log[[j]])
+      file.remove(gsub("./out_ess_estimates/","./ess/",log[[j]]))
     }else{
-      val = rbind(val, new.val)
+      
+    
+      new.val <- t[-seq(1,ceiling(length(t$posterior)/10)), ]
+      
+      if (first){
+        val = new.val
+      }else{
+        val = rbind(val, new.val)
+      }
     }
     
   }
@@ -67,6 +74,7 @@ for (i in seq(1,length(temperatures),1)){
     # t <- read.table(log[j], header=TRUE)
     t <- fread(log[j], header=TRUE,select = 2)
     
+
     if (i==1){
       t = t[seq(1,length(t$posterior),4)]
     }
@@ -87,6 +95,7 @@ for (i in seq(1,length(temperatures),1)){
       }
     }
   }
+
 }
 
 
@@ -95,6 +104,8 @@ p_speed <- ggplot(dfname)+
   geom_violin(aes(x=method, y=posterior_dist),colour="black") +
   theme(legend.position="none")  +
   ylab("KS distance") + 
+  scale_y_continuous(limits=c(0,0.1)) +
+  xlab("") + 
   theme_minimal()
 
 plot(p_speed)

@@ -26,7 +26,7 @@ col4 <- rgb(red=0.4660, green=0.6740,blue=0.1880)
 col3 <- rgb(red=0.3010, green=0.7450,blue=0.9330)
 
 temperatures = c("hcv_coal_mcmc", "hcv_coal_coupled_cold", "hcv_coal_coupled_warm", "hcv_coal_coupled_hot")
-method = c("mcmc", "cold", "warm", "hot")
+method = c("MCMC", "target=0.468", "target=0.234", "target=0.117")
 
 first = TRUE
 # Read In Data ---------------------------------
@@ -55,6 +55,7 @@ p_speed <- ggplot(dfname)+
   geom_violin(aes(x=method, y=posterior_ess),colour="black") +
   theme(legend.position="none")  +
   ylab("ESS") + 
+  xlab("") + 
   theme_minimal()
 
 plot(p_speed)

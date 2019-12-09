@@ -5,12 +5,6 @@
 ######################################################
 ######################################################
 library(ggplot2)
-# needed to get the node heights
-library(phytools)
-# needed to read the trees
-library(ape)
-library(coda)
-library("OutbreakTools")
 library(ggtree)
 
 # clear workspace
@@ -26,9 +20,9 @@ trees <- list.files(path="./out", pattern="*.rep1.trees", full.names = TRUE)
 
 
 # define the names
-names = c("cold", "warm", "hot", "mcmc")
+names = c("target probability = 0.117", "target probability = 0.234", "target probability = 0.468", "MCMC")
 
-# compare the clade probabilities between the first and the other runs
+# compare the clade probabilities between the first and the other runs, requires https://github.com/rbouckaert/Babel
 first = TRUE
 for (i in seq(1, length(trees))){
   for (j in seq(2,5)){
@@ -36,7 +30,7 @@ for (i in seq(1, length(trees))){
     tree2 = gsub("rep1",paste("rep", j,sep=""), trees[[i]] )
     # get the clade probabilities
     system("rm clades.txt")
-    system(paste("/Applications/BEAST\\ 2.5.2/bin/applauncher CladeSetComparator -tree1", tree1, "-tree2", tree2, "-out clades.txt"))
+    system(paste("/Applications/BEAST\\ 2.6.0/bin/applauncher CladeSetComparator -tree1", tree1, "-tree2", tree2, "-out clades.txt"))
     # read in the clade probabilities
     clades=read.table("clades.txt", header=F, sep=" ")
     new.cladeprob = data.frame(prob1=clades$V2,prob2=clades$V3)
@@ -54,10 +48,6 @@ for (i in seq(1, length(trees))){
 system("rm clades.txt")
 
 
-# /Applications/BEAST\ 2.5.0/bin/applauncher CladeSetComparator -tree1 ds1_coupledMCMC_02.rep1.trees -tree2 ds1_coupledMCMC_02.rep2.trees -out lala.txt
-
-
-
 # use the matlab standard colors to plot
 col0 <- rgb(red=0.0, green=0.4470,blue=0.7410)
 col1 <- rgb(red=0.8500, green=0.3250,blue=0.0980)
@@ -67,7 +57,7 @@ col3 <- rgb(red=0.3010, green=0.7450,blue=0.9330)
 
 
 p_clade = ggplot(data = transform(cladeprob,
-                                  method=factor(method,levels=c("mcmc","freezing", "cold","warm","hot")))) +
+                                  method=factor(method,levels=c("MCMC", "target probability = 0.468", "target probability = 0.234", "target probability = 0.117")))) +
   geom_point(aes(x=prob1, y=prob2, color=replicate)) +
   facet_wrap(.~method,ncol=2) +
   ylab("clade probabilities in first run") + 
@@ -75,11 +65,9 @@ p_clade = ggplot(data = transform(cladeprob,
   theme_minimal() +
   theme(panel.spacing = unit(1, "lines")) +
   scale_colour_manual(name="replicate run", values=c("2" = col0, "3" = col1, "4"=col2, "5"=col4))
-
-
 plot(p_clade)
 
-ggsave(plot=p_clade,paste("/Users/nicmuell/Documents/github/CoupledMCMC-Text/Figures/Clade_probabilities.pdf", sep=""),width=6, height=5)
+ggsave(plot=p_clade,paste("../../Figures/Clade_probabilities.pdf", sep=""),width=6, height=5)
 
 
 

@@ -26,12 +26,12 @@ col3 <- rgb(red=0.3010, green=0.7450,blue=0.9330)
 # read in the mcmc and coupled mcmc runs
 t.mcmc <- read.table("./out/structuredCoalescent-mcmc.log", header=TRUE, sep="\t")
 t.coupled <- read.table("./out/structuredCoalescent-coupled.log", header=TRUE, sep="\t")
-t.heated <- read.table("./out/chain1structuredCoalescent-coupled.log", header=TRUE, sep="\t")
+# t.heated <- read.table("./out/chain1structuredCoalescent-coupled.log", header=TRUE, sep="\t")
 
 p.post <- ggplot()+
   stat_density(data=t.mcmc, aes(x=posterior,y=..density.., color="MCMC"),geom="line" )+
   stat_density(data=t.coupled, aes(x=posterior,y=..density.., color="cold chain"),geom="line", linetype="twodash")+
-  stat_density(data=t.heated, aes(x=posterior,y=..density.., color="heated chain"),geom="line", linetype="dashed")+
+  # stat_density(data=t.heated, aes(x=posterior,y=..density.., color="heated chain"),geom="line", linetype="dashed")+
   scale_colour_manual(name="Sampling Method", values=c("MCMC" = col4, "cold chain"=col0, "heated chain"=col1)) +
   theme_minimal() 
   # theme(legend.position = "none")
@@ -40,15 +40,15 @@ plot(p.post)
 
 p.height <- ggplot()+
   stat_density(data=t.mcmc, aes(x=tree.height,y=..density.., color="MCMC"),geom="line", size=1)+
-  stat_density(data=t.coupled, aes(x=TreeHeightLogger,y=..density.., color="Coupled MCMC"),geom="line",linetype="twodash", size=0.5)+
+  stat_density(data=t.coupled, aes(x=TreeHeightLogger,y=..density.., color="adaptive parallel tempering"),geom="line",linetype="twodash", size=0.5)+
   # stat_density(data=t.heated, aes(x=TreeHeightLogger,y=..density.., color="heated chain"),geom="line",linetype="dotted", size=0.5)+
   stat_density(data=t.mcmc, aes(x=tree.length,y=..density.., color="MCMC"),geom="line", size=1)+
-  stat_density(data=t.coupled, aes(x=TreeLengthLogger,y=..density.., color="Coupled MCMC"),geom="line", linetype="twodash", size=0.5)+
+  stat_density(data=t.coupled, aes(x=TreeLengthLogger,y=..density.., color="adaptive parallel tempering"),geom="line", linetype="twodash", size=0.5)+
   # stat_density(data=t.heated, aes(x=TreeLengthLogger,y=..density.., color="heated chain"),geom="line", linetype="dashed", size=0.5)+
   xlab("statistic") +
   annotate("text", x = 5, y = 0.25, label = "Tree Height") +
   annotate("text", x = 11, y = 0.12, label = "Tree Length") +
-  scale_colour_manual(name="Sampling Method", values=c("MCMC" = col4, "Coupled MCMC"=col0)) +
+  scale_colour_manual(name="Sampling Method", values=c("MCMC" = col4, "adaptive parallel tempering"=col0)) +
   theme_minimal() 
   # theme(legend.position = "none")
 

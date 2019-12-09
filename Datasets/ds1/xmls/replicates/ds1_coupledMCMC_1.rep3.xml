@@ -66,7 +66,7 @@
 
 
 
-            <run id="ns" spec="beast.coupledMCMC.CoupledMCMC" logHeatedChains="true" maxTemperature="1" resampleEvery="100" chainLength="50000000" chains="4">
+  <run id="ns" spec="beast.coupledMCMC.CoupledMCMC" logHeatedChains="true" optimise="true" target="0.1170" resampleEvery="100" chainLength="50000000" chains="4">
     <state id="state" storeEvery="5000">
         <stateNode idref="Tree.t:DS1_tDNA"/>
         <stateNode idref="birthRate.t:DS1_tDNA"/>

@@ -90,7 +90,7 @@ name="alignment">
 
 
 <run id="mcmc" spec="MCMC" chainLength="40000000">
-    <state id="state" storeEvery="5000">
+    <state id="state" storeEvery="-1">
         <tree id="Tree.t:hcv" name="stateNode">
             <taxonset id="TaxonSet.hcv" spec="TaxonSet">
                 <alignment idref="hcv"/>
