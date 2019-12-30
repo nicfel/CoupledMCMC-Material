@@ -28,6 +28,10 @@ t.mcmc <- read.table("./out/structuredCoalescent-mcmc.log", header=TRUE, sep="\t
 t.coupled <- read.table("./out/structuredCoalescent-coupled.log", header=TRUE, sep="\t")
 # t.heated <- read.table("./out/chain1structuredCoalescent-coupled.log", header=TRUE, sep="\t")
 
+# remove burn-in of 10%
+t.mcmc = t.mcmc[-seq(1,length(t.mcmc$Sample)/10),]
+t.coupled = t.coupled[-seq(1,length(t.coupled$Sample)/10),]
+
 p.post <- ggplot()+
   stat_density(data=t.mcmc, aes(x=posterior,y=..density.., color="MCMC"),geom="line" )+
   stat_density(data=t.coupled, aes(x=posterior,y=..density.., color="cold chain"),geom="line", linetype="twodash")+
@@ -57,3 +61,38 @@ plot(p.height)
 
 ggsave(plot=p.height,paste("../../Figures/treeHeight.pdf", sep=""),width=6, height=3)
 ggsave(plot=p.post,paste("../../Figures/posterior.pdf", sep=""),width=6, height=3)
+
+
+## plot the ks distance vs. simulation
+t.sim = read.table("./out/structuredCoalescent-simulation.log", header=TRUE, sep="\t")
+dist = c()
+by = 100
+for (i in seq(by,length(t.coupled$Sample),by)){
+  print(i)
+  dist <- append(dist, ks.test(t.sim$tree.height,t.coupled$TreeHeightLogger[1:i])$statistic)
+}
+dat.coupled = data.frame(y=dist,x=t.coupled$Sample[seq(by,length(t.coupled$Sample),by)])
+
+dist = c()
+
+by = 1000
+for (i in seq(by,length(t.mcmc$Sample),by)){
+  print(i)
+  dist <- append(dist, ks.test(t.sim$tree.height,t.mcmc$tree.height[1:i])$statistic)
+}
+dat.mcmc = data.frame(y=dist,x=t.mcmc$Sample[seq(by,length(t.mcmc$Sample),by)])
+
+p.ks <- ggplot()+
+  geom_line(data=dat.coupled, aes(x=x,y=y, color="adaptive parallel tempering")) +
+  geom_line(data=dat.mcmc, aes(x=x,y=y, color="MCMC")) +
+  scale_colour_manual(name="Sampling Method", values=c("MCMC" = col4, "adaptive parallel tempering"=col0)) +
+  theme_minimal() +
+  xlab("iteration") +
+  scale_y_log10() +
+  ylab("KS distance")
+# theme(legend.position = "none")
+
+
+plot(p.ks)
+ggsave(plot=p.post,paste("../../Figures/KS_validation.pdf", sep=""),width=6, height=3)
+

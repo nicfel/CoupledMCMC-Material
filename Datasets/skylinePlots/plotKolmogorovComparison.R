@@ -49,9 +49,11 @@ for (i in seq(1,length(temperatures),1)){
       
     
       new.val <- t[-seq(1,ceiling(length(t$posterior)/10)), ]
+      new.val = new.val[seq(1,length(new.val$posterior),10),]
       
       if (first){
         val = new.val
+        first = F
       }else{
         val = rbind(val, new.val)
       }
